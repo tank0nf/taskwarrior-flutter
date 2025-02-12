@@ -47,11 +47,7 @@ dependencies:
   mockito: ^5.4.4
   package_info_plus: ^4.0.2
   pem: ^2.0.1
-  permission_handler:
-    git:
-      url: https://github.com/bvoq/flutter-permission-handler.git
-      path: permission_handler
-      ref: master
+  permission_handler: ^11.3.1
   shared_preferences: ^2.2.2
   shared_preferences_web: ^2.0.3
   sizer: ^2.0.15
@@ -64,6 +60,9 @@ dependencies:
   url_launcher: ^6.1.14
   uuid: ^4.2.2
   built_collection: ^5.1.1
+  davinci: ^2.5.1
+  path_provider: ^2.1.5
+  receive_intent: ^0.2.5
 
 dev_dependencies:
   build_runner: null

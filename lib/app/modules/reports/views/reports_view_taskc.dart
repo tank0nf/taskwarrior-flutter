@@ -137,10 +137,10 @@ class ReportsHomeTaskc extends StatelessWidget {
                   : Obx(
                       () => IndexedStack(
                         index: reportsController.selectedIndex.value,
-                        children: [
-                          BurnDownDailyTaskc(),
-                          BurnDownWeeklyTask(),
-                          BurnDownMonthlyTaskc(),
+                        children: const [
+                          // BurnDownDailyTaskc(),
+                          // BurnDownWeeklyTask(),
+                          // BurnDownMonthlyTaskc(),
                         ],
                       ),
                     ),

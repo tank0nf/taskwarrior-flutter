@@ -25,74 +25,80 @@ class BurnDownDaily extends StatelessWidget {
         Expanded(
           child: SizedBox(
               height: height * 0.6,
-              child: Obx(
-                () => SfCartesianChart(
-                  primaryXAxis: CategoryAxis(
-                    title: AxisTitle(
-                      text: SentenceManager(
-                              currentLanguage: AppSettings.selectedLanguage)
-                          .sentences
-                          .reportsPageDailyDayMonth,
-                      textStyle: TextStyle(
-                        fontFamily: FontFamily.poppins,
-                        fontWeight: TaskWarriorFonts.bold,
-                        color: AppSettings.isDarkMode
-                            ? Colors.white
-                            : Colors.black,
-                        fontSize: TaskWarriorFonts.fontSizeSmall,
+              child: RepaintBoundary(
+                key: reportsController.chartKey, // Assign the chartKey here
+                child: Obx(
+                  () => SfCartesianChart(
+                    primaryXAxis: CategoryAxis(
+                      title: AxisTitle(
+                        text: SentenceManager(
+                                currentLanguage: AppSettings.selectedLanguage)
+                            .sentences
+                            .reportsPageDailyDayMonth,
+                        textStyle: TextStyle(
+                          fontFamily: FontFamily.poppins,
+                          fontWeight: TaskWarriorFonts.bold,
+                          color: AppSettings.isDarkMode
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: TaskWarriorFonts.fontSizeSmall,
+                        ),
                       ),
                     ),
-                  ),
-                  primaryYAxis: NumericAxis(
-                    title: AxisTitle(
-                      text: SentenceManager(currentLanguage: AppSettings.selectedLanguage).sentences.reportsPageTasks,
-                      textStyle: TextStyle(
-                        fontFamily: FontFamily.poppins,
-                        fontWeight: TaskWarriorFonts.bold,
-                        color: AppSettings.isDarkMode
-                            ? Colors.white
-                            : Colors.black,
-                        fontSize: TaskWarriorFonts.fontSizeSmall,
+                    primaryYAxis: NumericAxis(
+                      title: AxisTitle(
+                        text: SentenceManager(
+                                currentLanguage: AppSettings.selectedLanguage)
+                            .sentences
+                            .reportsPageTasks,
+                        textStyle: TextStyle(
+                          fontFamily: FontFamily.poppins,
+                          fontWeight: TaskWarriorFonts.bold,
+                          color: AppSettings.isDarkMode
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: TaskWarriorFonts.fontSizeSmall,
+                        ),
                       ),
                     ),
-                  ),
-                  tooltipBehavior:
-                      reportsController.dailyBurndownTooltipBehaviour,
-                  series: <ChartSeries>[
-                    /// This is the completed tasks
-                    StackedColumnSeries<ChartData, String>(
-                      groupName: 'Group A',
-                      enableTooltip: true,
-                      color: TaskWarriorColors.green,
-                      dataSource: reportsController.dailyInfo.entries
-                          .map((entry) => ChartData(
-                                entry.key,
-                                entry.value['pending'] ?? 0,
-                                entry.value['completed'] ?? 0,
-                              ))
-                          .toList(),
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y2,
-                      name: 'Completed',
-                    ),
+                    tooltipBehavior:
+                        reportsController.dailyBurndownTooltipBehaviour,
+                    series: <ChartSeries>[
+                      /// This is the completed tasks
+                      StackedColumnSeries<ChartData, String>(
+                        groupName: 'Group A',
+                        enableTooltip: true,
+                        color: TaskWarriorColors.green,
+                        dataSource: reportsController.dailyInfo.entries
+                            .map((entry) => ChartData(
+                                  entry.key,
+                                  entry.value['pending'] ?? 0,
+                                  entry.value['completed'] ?? 0,
+                                ))
+                            .toList(),
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y2,
+                        name: 'Completed',
+                      ),
 
-                    /// This is the pending tasks
-                    StackedColumnSeries<ChartData, String>(
-                      groupName: 'Group A',
-                      color: TaskWarriorColors.yellow,
-                      enableTooltip: true,
-                      dataSource: reportsController.dailyInfo.entries
-                          .map((entry) => ChartData(
-                                entry.key,
-                                entry.value['pending'] ?? 0,
-                                entry.value['completed'] ?? 0,
-                              ))
-                          .toList(),
-                      xValueMapper: (ChartData data, _) => data.x,
-                      yValueMapper: (ChartData data, _) => data.y1,
-                      name: 'Pending',
-                    ),
-                  ],
+                      /// This is the pending tasks
+                      StackedColumnSeries<ChartData, String>(
+                        groupName: 'Group A',
+                        color: TaskWarriorColors.yellow,
+                        enableTooltip: true,
+                        dataSource: reportsController.dailyInfo.entries
+                            .map((entry) => ChartData(
+                                  entry.key,
+                                  entry.value['pending'] ?? 0,
+                                  entry.value['completed'] ?? 0,
+                                ))
+                            .toList(),
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y1,
+                        name: 'Pending',
+                      ),
+                    ],
+                  ),
                 ),
               )),
         ),
@@ -100,6 +106,14 @@ class BurnDownDaily extends StatelessWidget {
           title: SentenceManager(currentLanguage: AppSettings.selectedLanguage)
               .sentences
               .reportsPageDailyBurnDownChart,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              reportsController.captureChart();
+            });
+          },
+          child: const Text('Update Home Widget'),
         ),
       ],
     );
